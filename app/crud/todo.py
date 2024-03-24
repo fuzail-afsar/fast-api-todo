@@ -17,3 +17,26 @@ def create(todo: Todo, db: DB):
 def fetch(db: DB):
     todos = db.exec(select(Todo)).all()
     return todos
+
+
+def get_by_id(id: int, db: DB):
+    statement = select(Todo).where(Todo.id == id)
+    return db.exec(statement).one()
+
+
+def update_by_id(id: int, content, db: DB):
+    todo = get_by_id(id, db)
+    todo.content = content
+
+    db.add(todo)
+    db.commit()
+    db.refresh(todo)
+
+    return todo
+
+
+def delete_by_id(id: int, db: DB):
+    todo = get_by_id(id, db)
+
+    db.delete(todo)
+    db.commit()
