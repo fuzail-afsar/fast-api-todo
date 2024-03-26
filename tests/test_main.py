@@ -77,3 +77,18 @@ def test_delete_todo():
     todos = response.json()
 
     assert all(todo["id"] != todo_id for todo in todos)
+
+
+def test_delete_all_todos():
+    todo_content = "test delete all todos"
+
+    response = client.post("/api/todos/", json={"content": todo_content})
+    assert response.status_code == 200
+
+    response = client.delete("/api/todos/")
+    assert response.status_code == 200
+
+    response = client.get("/api/todos")
+    todos = response.json()
+
+    assert len(todos) == 0

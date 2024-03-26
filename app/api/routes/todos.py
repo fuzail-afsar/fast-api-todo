@@ -24,4 +24,9 @@ def update_todo(id: str, update_todo: UpdateTodo, db: DB):
 
 @router.delete("/{id}")
 def delete_todo(id: str, db: DB):
-    return todoCrud.delete_by_id(int(id), db)
+    todoCrud.delete_by_id(int(id), db)
+
+
+@router.delete("/")
+def delete_all_todos(db: DB):
+    todoCrud.delete_all(db)

@@ -1,6 +1,4 @@
-from typing import Annotated
-from fastapi import Depends
-from sqlmodel import Session, select
+from sqlmodel import select, delete
 
 from app.core.db import DB
 from app.models.todo import Todo
@@ -39,4 +37,9 @@ def delete_by_id(id: int, db: DB):
     todo = get_by_id(id, db)
 
     db.delete(todo)
+    db.commit()
+
+
+def delete_all(db: DB):
+    db.exec(delete(Todo))
     db.commit()
