@@ -14,7 +14,7 @@ engine = create_engine(
 )
 
 
-def init_db() -> None:
+def init_db(engine=engine) -> None:
     SQLModel.metadata.create_all(engine)
 
 
