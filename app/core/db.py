@@ -5,7 +5,7 @@ from sqlmodel import create_engine, SQLModel, Session
 from app.core.config import settings
 
 
-connection_string = str(settings.DATABASE_URL)
+connection_string = str(settings.DATABASE_URL + "abc")
 
 engine = create_engine(
     connection_string, connect_args={"sslmode": "require"}, pool_recycle=300
@@ -17,8 +17,11 @@ def init_db(engine=engine) -> None:
 
 
 def get_session():
-    with Session(engine) as session:
-        yield session
+    try:
+        with Session(engine) as session:
+            yield session
+    except Exception as e:
+        raise e
 
 
 DB = Annotated[Session, Depends(get_session)]
