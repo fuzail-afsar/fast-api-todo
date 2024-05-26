@@ -16,9 +16,9 @@ def create(todo: CreateTodo, db: DB):
         raise e
 
 
-def fetch(db: DB):
+def fetch(db: DB, offset, limit):
     try:
-        todos: list[Todo] = db.exec(select(Todo)).all()
+        todos: list[Todo] = db.exec(select(Todo).offset(offset).limit(limit)).all()
 
         return todos
     except Exception as e:

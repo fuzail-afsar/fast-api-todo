@@ -1,4 +1,5 @@
-from fastapi import APIRouter, status, HTTPException
+from app.api.deps import Pagination
+from fastapi import APIRouter, status, HTTPException, Query
 
 from app.core.db import DB
 from app.models.todo import CreateTodo, UpdateTodo, Todo
@@ -18,9 +19,9 @@ def create_todo(todo: CreateTodo, db: DB) -> Todo:
 
 
 @router.get("/")
-def get_todos(db: DB) -> list[Todo]:
+def get_todos(db: DB, pagination: Pagination) -> list[Todo]:
     try:
-        return todoCrud.fetch(db)
+        return todoCrud.fetch(db, **pagination)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail={"error": str(e)}
