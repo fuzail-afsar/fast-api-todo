@@ -1,5 +1,5 @@
 from app.api.deps import Pagination
-from fastapi import APIRouter, status, HTTPException, Query
+from fastapi import APIRouter, status, HTTPException
 
 from app.core.db import DB
 from app.models.todo import CreateTodo, UpdateTodo, Todo

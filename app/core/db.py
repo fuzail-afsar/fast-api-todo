@@ -2,12 +2,10 @@ from typing import Annotated
 from fastapi import Depends
 from sqlmodel import create_engine, SQLModel, Session
 
-from app.core import settings
+from app.core.config import settings
 
 
-connection_string = str(settings.DATABASE_URL).replace(
-    "postgresql", "postgresql+psycopg"
-)
+connection_string = str(settings.DATABASE_URL)
 
 engine = create_engine(
     connection_string, connect_args={"sslmode": "require"}, pool_recycle=300

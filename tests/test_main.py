@@ -3,12 +3,10 @@ from sqlmodel import create_engine, Session
 
 
 from app.main import app
-from app.core import settings
+from app.core.config import settings
 from app.core.db import init_db, get_session
 
-connection_string = str(settings.TEST_DATABASE_URL).replace(
-    "postgresql", "postgresql+psycopg"
-)
+connection_string = str(settings.TEST_DATABASE_URL)
 
 engine = create_engine(
     connection_string, connect_args={"sslmode": "require"}, pool_recycle=300
