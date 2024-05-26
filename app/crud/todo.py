@@ -1,45 +1,79 @@
 from sqlmodel import select, delete
 
 from app.core.db import DB
-from app.models.todo import Todo
+from app.models.todo import CreateTodo, Todo, UpdateTodo
 
 
-def create(todo: Todo, db: DB):
-    print("todo", todo)
-    db.add(todo)
-    db.commit()
-    db.refresh(todo)
-    return todo
+def create(todo: CreateTodo, db: DB):
+    try:
+        todo_created: Todo = Todo.model_validate(todo)
+        db.add(todo_created)
+        db.commit()
+        db.refresh(todo_created)
+
+        return todo_created
+    except Exception as e:
+        raise e
 
 
 def fetch(db: DB):
-    todos = db.exec(select(Todo)).all()
-    return todos
+    try:
+        todos: list[Todo] = db.exec(select(Todo)).all()
+
+        return todos
+    except Exception as e:
+        raise e
 
 
 def get_by_id(id: int, db: DB):
-    statement = select(Todo).where(Todo.id == id)
-    return db.exec(statement).one()
+    try:
+        statement = select(Todo).where(Todo.id == id)
+        result: Todo = db.exec(statement).one()
+
+        return result
+    except Exception as e:
+        raise e
 
 
-def update_by_id(id: int, content, db: DB):
-    todo = get_by_id(id, db)
-    todo.content = content
+def update_by_id(id: int, data: UpdateTodo, db: DB):
+    try:
+        todo = get_by_id(id, db)
 
-    db.add(todo)
-    db.commit()
-    db.refresh(todo)
+        if not todo:
+            raise "Todo not found!"
 
-    return todo
+        updated_data = data.model_dump(exclude_unset=True)
+        todo.sqlmodel_update(updated_data)
+
+        db.add(todo)
+        db.commit()
+        db.refresh(todo)
+
+        return todo
+    except Exception as e:
+        raise e
 
 
 def delete_by_id(id: int, db: DB):
-    todo = get_by_id(id, db)
+    try:
+        todo = get_by_id(id, db)
 
-    db.delete(todo)
-    db.commit()
+        if not todo:
+            raise "Todo not found!"
+
+        db.delete(todo)
+        db.commit()
+
+        return True
+    except Exception as e:
+        raise e
 
 
 def delete_all(db: DB):
-    db.exec(delete(Todo))
-    db.commit()
+    try:
+        db.exec(delete(Todo))
+        db.commit()
+
+        return True
+    except Exception as e:
+        raise e
