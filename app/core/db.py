@@ -5,7 +5,7 @@ from sqlmodel import create_engine, SQLModel, Session
 from app.core.config import settings
 
 
-connection_string = str(settings.DATABASE_URL + "abc")
+connection_string = str(settings.DATABASE_URL)
 
 engine = create_engine(
     connection_string, connect_args={"sslmode": "require"}, pool_recycle=300
