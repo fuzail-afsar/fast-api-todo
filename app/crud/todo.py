@@ -4,7 +4,7 @@ from app.core.db import DB
 from app.models.todo import CreateTodo, Todo, UpdateTodo
 
 
-def create(todo: CreateTodo, db: DB):
+def create(todo: CreateTodo, db: DB) -> Todo:
     try:
         todo_created: Todo = Todo.model_validate(todo)
         db.add(todo_created)
@@ -13,7 +13,8 @@ def create(todo: CreateTodo, db: DB):
 
         return todo_created
     except Exception as e:
-        raise e
+        print("Exception:", e)
+        return None
 
 
 def fetch(db: DB, offset, limit):
@@ -22,17 +23,18 @@ def fetch(db: DB, offset, limit):
 
         return todos
     except Exception as e:
-        raise e
+        print("Exception:", e)
+        return None
 
 
 def get_by_id(id: int, db: DB):
     try:
-        statement = select(Todo).where(Todo.id == id)
-        result: Todo = db.exec(statement).one()
+        todo: Todo = db.get(Todo, id)
 
-        return result
+        return todo
     except Exception as e:
-        raise e
+        print("Exception:", e)
+        return None
 
 
 def update_by_id(id: int, data: UpdateTodo, db: DB):
@@ -40,7 +42,7 @@ def update_by_id(id: int, data: UpdateTodo, db: DB):
         todo = get_by_id(id, db)
 
         if not todo:
-            raise "Todo not found!"
+            return None
 
         updated_data = data.model_dump(exclude_unset=True)
         todo.sqlmodel_update(updated_data)
@@ -51,7 +53,8 @@ def update_by_id(id: int, data: UpdateTodo, db: DB):
 
         return todo
     except Exception as e:
-        raise e
+        print("Exception:", e)
+        return None
 
 
 def delete_by_id(id: int, db: DB):
@@ -59,14 +62,15 @@ def delete_by_id(id: int, db: DB):
         todo = get_by_id(id, db)
 
         if not todo:
-            raise "Todo not found!"
+            None
 
         db.delete(todo)
         db.commit()
 
         return True
     except Exception as e:
-        raise e
+        print("Exception:", e)
+        return None
 
 
 def delete_all(db: DB):
@@ -76,4 +80,5 @@ def delete_all(db: DB):
 
         return True
     except Exception as e:
-        raise e
+        print("Exception:", e)
+        return None
