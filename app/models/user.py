@@ -13,6 +13,7 @@ class User(BaseUser, table=True):
     hashed_password: str
     is_active: bool = True
     created_at: datetime = Field(default=datetime.now())
+    updated_at: datetime = Field(default=datetime.now())
 
 
 class CreateUser(BaseUser):
@@ -23,12 +24,16 @@ class CreateUser(BaseUser):
 class CreatedUser(BaseUser):
     id: int
     created_at: datetime
+    updated_at: datetime
+
+
+class CurrentUser(CreatedUser):
+    pass
 
 
 class UpdateUser(SQLModel):
     name: str
 
 
-class UpdatePassword(SQLModel):
-    current_password: str
-    new_password: str
+class UpdatedUser(CreatedUser):
+    pass
